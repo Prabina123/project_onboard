@@ -1,0 +1,139 @@
+version: '1'
+services:
+  mavros_0:
+    build: ./mavros
+    depends_on:
+      - roscore
+    environment:
+      - "ROS_MASTER_URI=http://roscore:11311"
+      - "ROS_NAMESPACE=uav0"
+    ports:
+      - "15000:15000/udp"
+    command: ["stdbuf", "-o", "L", "roslaunch", "--wait", "mavros", "px4.launch", "fcu_url:=udp://:15000@:16000", "tgt_system:=1"] 
+    
+  mavros_1:
+    build: ./mavros
+    depends_on:
+      - roscore
+    environment:
+      - "ROS_MASTER_URI=http://roscore:11311"
+      - "ROS_NAMESPACE=uav1"
+    ports:
+      - "15001:15001/udp"
+    command: ["stdbuf", "-o", "L", "roslaunch", "--wait", "mavros", "px4.launch", "fcu_url:=udp://:15001@:16001", "tgt_system:=2"] 
+    
+  mavros_2:
+    build: ./mavros
+    depends_on:
+      - roscore
+    environment:
+      - "ROS_MASTER_URI=http://roscore:11311"
+      - "ROS_NAMESPACE=uav2"
+    ports:
+      - "15002:15002/udp"
+    command: ["stdbuf", "-o", "L", "roslaunch", "--wait", "mavros", "px4.launch", "fcu_url:=udp://:15002@:16002", "tgt_system:=3"] 
+    
+  mavros_3:
+    build: ./mavros
+    depends_on:
+      - roscore
+    environment:
+      - "ROS_MASTER_URI=http://roscore:11311"
+      - "ROS_NAMESPACE=uav3"
+    ports:
+      - "15003:15003/udp"
+    command: ["stdbuf", "-o", "L", "roslaunch", "--wait", "mavros", "px4.launch", "fcu_url:=udp://:15003@:16003", "tgt_system:=4"] 
+    
+  mavros_4:
+    build: ./mavros
+    depends_on:
+      - roscore
+    environment:
+      - "ROS_MASTER_URI=http://roscore:11311"
+      - "ROS_NAMESPACE=uav4"
+    ports:
+      - "15004:15004/udp"
+    command: ["stdbuf", "-o", "L", "roslaunch", "--wait", "mavros", "px4.launch", "fcu_url:=udp://:15004@:16004", "tgt_system:=5"] 
+    
+  mavros_5:
+    build: ./mavros
+    depends_on:
+      - roscore
+    environment:
+      - "ROS_MASTER_URI=http://roscore:11311"
+      - "ROS_NAMESPACE=uav5"
+    ports:
+      - "15005:15005/udp"
+    command: ["stdbuf", "-o", "L", "roslaunch", "--wait", "mavros", "px4.launch", "fcu_url:=udp://:15005@:16005", "tgt_system:=6"] 
+    
+  mavros_6:
+    build: ./mavros
+    depends_on:
+      - roscore
+    environment:
+      - "ROS_MASTER_URI=http://roscore:11311"
+      - "ROS_NAMESPACE=uav6"
+    ports:
+      - "15006:15006/udp"
+    command: ["stdbuf", "-o", "L", "roslaunch", "--wait", "mavros", "px4.launch", "fcu_url:=udp://:15006@:16006", "tgt_system:=7"] 
+    
+  mavros_7:
+    build: ./mavros
+    depends_on:
+      - roscore
+    environment:
+      - "ROS_MASTER_URI=http://roscore:11311"
+      - "ROS_NAMESPACE=uav7"
+    ports:
+      - "15007:15007/udp"
+    command: ["stdbuf", "-o", "L", "roslaunch", "--wait", "mavros", "px4.launch", "fcu_url:=udp://:15007@:16007", "tgt_system:=8"] 
+    
+  mavros_8:
+    build: ./mavros
+    depends_on:
+      - roscore
+    environment:
+      - "ROS_MASTER_URI=http://roscore:11311"
+      - "ROS_NAMESPACE=uav8"
+    ports:
+      - "15008:15008/udp"
+    command: ["stdbuf", "-o", "L", "roslaunch", "--wait", "mavros", "px4.launch", "fcu_url:=udp://:15008@:16008", "tgt_system:=9"] 
+    
+  mavros_9:
+    build: ./mavros
+    depends_on:
+      - roscore
+    environment:
+      - "ROS_MASTER_URI=http://roscore:11311"
+      - "ROS_NAMESPACE=uav9"
+    ports:
+      - "15009:15009/udp"
+    command: ["stdbuf", "-o", "L", "roslaunch", "--wait", "mavros", "px4.launch", "fcu_url:=udp://:15009@:16009", "tgt_system:=10"] 
+  
+  px4:
+    depends_on:
+      - mavros_0
+      - mavros_1
+      - mavros_2
+      - mavros_3
+      - mavros_4
+      - mavros_5
+      - mavros_6
+      - mavros_7
+      - mavros_8
+      - mavros_9
+    command: start_simulation_multi.sh
+
+  dev:
+    depends_on:
+      - mqtt
+      - mqtt_local
+      - roscore
+      - px4
+    command: /bin/sh -c "while sleep 1000; do :; done"
+# starting up services:
+# docker compose -f docker-compose.yml -f multi_drone.yml up 
+# shutting down services: run with both files since new service in multi_drone.yml
+# otherwise you will end up with an orphaned container: 
+# https://stackoverflow.com/questions/41494612/docker-compose-orphan-containers-when-overriding-services
+# docker compose -f docker-compose.yml -f multi_drone.yml down
